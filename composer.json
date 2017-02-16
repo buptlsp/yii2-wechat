@@ -1,0 +1,23 @@
+{
+    "name": "lspbupt/yii2-wechat",
+    "type": "yii2-extension",
+    "description": "The wechat-sdk for Yii2 framework",
+    "keywords": ["yii2", "wechat", "weixin", "sdk"],
+    "license": "MIT",
+    "support": {
+    },
+    "authors": [
+        {
+            "name": "lishipeng",
+            "email": "lspbupt@sina.com"
+        }
+    ],
+    "require": {
+        "lspbupt/yii2-curl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "lspbupt\\wechat\\": "src/"
+        }
+    }
+}
