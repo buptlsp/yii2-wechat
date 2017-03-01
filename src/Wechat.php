@@ -14,7 +14,6 @@ class Wechat extends \lspbupt\curl\CurlHttp
     public $cache = 'cache';
     const WEIXIN_TOKENURL = "/cgi-bin/token";
     const WEIXIN_CACHEKEY = "weixin_cachekey";
-    const WEIXIN_JSAPI_CACHEKEY = "weixin_jsapi_cachekey";
 
     public function init()
     {
@@ -35,11 +34,18 @@ class Wechat extends \lspbupt\curl\CurlHttp
         };
         $this->afterRequest = function($output, $curlhttp) {
             $data = json_decode($output, true);
-            if(empty($output)) {
+            if(empty($output) || empty($data)) {
                 $data = [
                     'errcode' => 1,
                     'errmsg' => '网络错误!',
                 ]; 
+            }
+            if(empty($data['errcode'])) {
+                $data = [
+                    'errcode' => 0,
+                    'errmsg' => '请求成功',
+                    'data' => $data,
+                ];
             }
             return $data;
         };
@@ -58,8 +64,9 @@ class Wechat extends \lspbupt\curl\CurlHttp
         }
         $arr = $this->getToken();
         if($arr['errcode'] == 0) {
-            $this->cache->set(self::WEIXIN_CACHEKEY.$this->appid, $arr['access_token'], 3600);
-            return $arr['access_token'];
+            $access_token = $arr['data']['access_token'];
+            $this->cache->set(self::WEIXIN_CACHEKEY.$this->appid, $access_token, 3600);
+            return $access_token;
         }
         return "";
     }
@@ -67,8 +74,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
     public function getJsapiTicket()
     {
         return $this->setGet()
-            ->setProtocol("https")
-            ->httpExec("/get_jsapi_ticket", []); 
+            ->httpExec("/cgi-bin/ticket/getticket", ['type' => 'jsapi']); 
     }
 
     public function getJsapiTicketFromCache()
@@ -79,7 +85,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
         }
         $arr = $this->getJsapiTicket();
         if($arr['errcode'] == 0) {
-            $jsapitoken = $arr["ticket"];
+            $jsapitoken = $arr['data']["ticket"];
             $expire = $arr['expires_in'];  
             $this->cache->set(self::WEIXIN_JSAPI_CACHEKEY.$this->appid, $jsapitoken, $expire-60);
             return $jsapitoken;
@@ -102,14 +108,15 @@ class Wechat extends \lspbupt\curl\CurlHttp
 
     public function __call($method, $args)
     {
-        $classPrefix = "\lspbupt\wechat\helpers";
+        $classPrefix = '\lspbupt\wechat\helpers\\';
         $arr = explode("_", $method);
         if(count($arr) == 2) {
-            $className = $classPrefix.Inflector::id2camel($arr[0]);
+            $className = $classPrefix.Inflector::id2camel($arr[0]).'Helper';
             $methodName = $arr[1];
             //如果class 和方法均存在，则调用helper中的静态方法
+            array_unshift($args, $this);
             if(class_exists($className) && method_exists($className, $methodName)) {
-                return call_user_func([$className, $methodName], $this, $args); 
+                return call_user_func_array([$className, $methodName], $args); 
             }
         } 
         throw \Exception("该方法不存在");
