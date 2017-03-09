@@ -11,7 +11,7 @@ class WxLogin extends \lspbupt\curl\CurlHttp
     public $protocol = "https";
 
     public $cache = 'cache';
-    const WEIXIN_CACHEKEY = "dingapp_cachekey";
+    const WEIXIN_CACHEKEY = "wxloginapp_cachekey";
     const WEIXIN_TOKENURL = "/sns/oauth2/access_token";
     
     private $code = "";    
