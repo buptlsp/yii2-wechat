@@ -44,7 +44,6 @@ class JsapiConfig extends Widget
             'url' => $this->getUrl(),
         ];
         $sign = $this->wechat->JsSign($arr);
-        var_dump($arr);
         $js ="wx.config({
              debug : ".$this->debug.",
              appId: '".$this->wechat->appid."',// 必填，企业ID
