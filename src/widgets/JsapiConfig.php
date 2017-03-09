@@ -1,5 +1,5 @@
 <?php
-namespace lspbupt\wechat;
+namespace lspbupt\wechat\widgets;
 use \Yii;
 use yii\base\Widget;
 use yii\web\JsExpression;
@@ -44,9 +44,11 @@ class JsapiConfig extends Widget
             'url' => $this->getUrl(),
         ];
         $sign = $this->wechat->JsSign($arr);
+        var_dump($arr);
         $js ="wx.config({
-             appId: '".$arr['corpid']."',//必填，企业ID
-             timeStamp: ".$arr['timestamp'].", // 必填，生成签名的时间戳
+             debug : ".$this->debug.",
+             appId: '".$this->wechat->appid."',// 必填，企业ID
+             timestamp: ".$arr['timestamp'].", // 必填，生成签名的时间戳
              nonceStr: '".$arr['noncestr']."', // 必填，生成签名的随机串
              signature: '".$sign."', // 必填，签名
              jsApiList: ".json_encode($this->jsApiList)." // 必填，需要使用的jsapi列表

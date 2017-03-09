@@ -14,6 +14,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
     public $cache = 'cache';
     const WEIXIN_TOKENURL = "/cgi-bin/token";
     const WEIXIN_CACHEKEY = "weixin_cachekey";
+    const WEIXIN_JSAPI_CACHEKEY = 'weixin_jaapi_cachekey';
 
     public function init()
     {
@@ -86,7 +87,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
         $arr = $this->getJsapiTicket();
         if($arr['errcode'] == 0) {
             $jsapitoken = $arr['data']["ticket"];
-            $expire = $arr['expires_in'];  
+            $expire = $arr['data']['expires_in'];  
             $this->cache->set(self::WEIXIN_JSAPI_CACHEKEY.$this->appid, $jsapitoken, $expire-60);
             return $jsapitoken;
         }
