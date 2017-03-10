@@ -44,8 +44,9 @@ class JsapiConfig extends Widget
             'url' => $this->getUrl(),
         ];
         $sign = $this->wechat->JsSign($arr);
+        $debug = $this->debug ? 'true' : 'false';
         $js ="wx.config({
-             debug : ".$this->debug.",
+             debug : ". $debug .",
              appId: '".$this->wechat->appid."',// 必填，企业ID
              timestamp: ".$arr['timestamp'].", // 必填，生成签名的时间戳
              nonceStr: '".$arr['noncestr']."', // 必填，生成签名的随机串
