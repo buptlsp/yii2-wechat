@@ -59,7 +59,7 @@ class WxLogin extends \lspbupt\curl\CurlHttp
 
     public function getToken()
     {
-        return $this->setGet()->setDebug()->httpExec("/sns/oauth2/access_token", [
+        return $this->setGet()->httpExec("/sns/oauth2/access_token", [
             'appid'=>$this->appid, 
             'secret' => $this->appsecret,
             'code' => $this->getCode(),
