@@ -24,7 +24,6 @@ class WxLogin extends \lspbupt\curl\CurlHttp
 
     protected function afterCurl($output)
     {
-        var_dump($output);
         $data = json_decode($output, true);
         if(empty($output) || empty($data)) {
             $data = [
