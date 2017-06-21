@@ -48,11 +48,9 @@ class CallbackAction extends Action
     public function run()
     {
         $arr = Yii::$app->request->get();
-        Yii::error($arr, "test");
         $arr['token'] = $this->token;
         if(self::checkSign($arr)) {
             $postArr = Yii::$app->request->post();
-        Yii::error($postArr, "test");
             if(empty($postArr)) {
                 return ArrayHelper::getValue($arr, "echostr", "");
             }

@@ -63,33 +63,5 @@ class XmlResponseFormatter extends \yii\web\XmlResponseFormatter{
         } else {
             $element->appendChild(new DOMText($this->formatScalarValue($data)));
         }
-
-
-
-        /*if (is_object($data)) {
-            // 这里保持原来的代码不变
-        } elseif (is_array($data)) {
-            foreach ($data as $name => $value) {
-                if (is_int($name) && is_object($value)) {
-                    $this->buildXml($element, $value);
-                } elseif (is_array($value) || is_object($value)) {
-                    $child = new DOMElement(is_int($name) ? $this->itemTag : $name);
-                    $element->appendChild($child);
-                    // 主要就是修改这一个点，如果值是一个数组，并且含有 CDATA 的，那么就直接创建一个 CdataSection 节点，
-                    // 而不把它本身当作列表再回调。
-                    if(array_key_exists(self::CDATA, $value)){
-                        $child->appendChild(new DOMCdataSection((string) $value[0]));
-                    }else{
-                        $this->buildXml($child, $value);
-                    }
-                } else {
-                    $child = new DOMElement(is_int($name) ? $this->itemTag : $name);
-                    $element->appendChild($child);
-                    $child->appendChild(new DOMText((string) $value));
-                }
-            }
-        } else {
-            $element->appendChild(new DOMText((string) $data));
-        }*/
     }
 }
