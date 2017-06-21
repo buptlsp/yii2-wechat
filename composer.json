@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "bobchengbin/yii2-xml-request-parser": "v0.0.2",
         "lspbupt/yii2-curl": "*"
     },
     "autoload": {
