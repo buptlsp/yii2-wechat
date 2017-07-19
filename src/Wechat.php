@@ -104,7 +104,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
             '&noncestr=' . $arr['noncestr'] .
             '&timestamp=' . $arr['timestamp'] .
             '&url=' . $arr['url'];
-        return sha1($plain);
+        return sha1(str_replace('|', '%7C', $plain));
     }
 
     public function __call($method, $args)
