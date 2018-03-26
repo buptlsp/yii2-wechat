@@ -120,7 +120,7 @@ class Wechat extends \lspbupt\curl\CurlHttp
                 return call_user_func_array([$className, $methodName], $args); 
             }
         } 
-        throw \Exception("该方法不存在");
+        throw new \Exception($method.":该方法不存在");
     }
 
 }

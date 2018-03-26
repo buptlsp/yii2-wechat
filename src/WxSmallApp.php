@@ -8,7 +8,19 @@ class WxSmallApp extends \lspbupt\curl\CurlHttp
     public $appsecret = "";
     public $host = "api.weixin.qq.com";
     public $protocol = "https";
+    public $wechat = [
+        'class' => "\lspbupt\wechat\Wechat",
+    ];
 
+    public function init()
+    {
+        $ret = parent::init();
+        $this->wechat['appid'] = $this->appid;
+        $this->wechat['appsecret'] = $this->appsecret;
+        $this->wechat = Yii::createObject($this->wechat);
+        return $ret;
+    }
+    
     public function jscode2session($js_code, $grant_type = "authorization_code")
     {
         return $this->setGet()->httpExec("/sns/jscode2session", [
