@@ -207,7 +207,8 @@ class WxPay extends \lspbupt\curl\CurlHttp
         ksort($data);
         $str = '';
         foreach ($data as $key => $value) {
-            $str .= "$key=$value&";
+            //xml计算签名不算空的值。所以key也不能要。
+            $value && $str .= "$key=$value&";
         }
         $str .= "key=$mch_key";
         return strtoupper(md5($str));
