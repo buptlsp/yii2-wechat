@@ -215,22 +215,6 @@ class WxPay extends \lspbupt\curl\CurlHttp
         return strtoupper(md5($str));
     }
 
-    private static function decode(string $src, array &$dst, string $mch_key): bool
-    {
-        $srcDecode = base64_decode($src, true);
-        $key = md5($mch_key);
-        $data = openssl_decrypt($srcDecode, 'AES-256-ECB', $key, OPENSSL_RAW_DATA, '');
-        if ($data === false) {
-            return false;
-        }
-        $decodeData = self::xmlToArray($data);
-        if ($decodeData === null) {
-            return false;
-        }
-        $dst = array_merge($dst, $decodeData);
-        return true;
-    }
-
     private static function arrayToXml(array $data): string
     {
         $xml = '<xml>';
@@ -245,9 +229,13 @@ class WxPay extends \lspbupt\curl\CurlHttp
         return $xml;
     }
 
-    private static function xmlToArray(string $xml): ?array
+    private static function xmlToArray(string $xml, string $root = 'xml'): ?array
     {
-        return ArrayHelper::getValue(Xml2Array::go($xml), 'xml', null);
+        $ret = ArrayHelper::getValue(Xml2Array::go($xml), $root, null);
+        if (!is_array($ret) || $ret === null) {
+            return null;
+        }
+        return $ret;
     }
 
     private function setCert()
@@ -327,5 +315,21 @@ class WxPay extends \lspbupt\curl\CurlHttp
             return true;
         }
         return false;
+    }
+
+    private static function decode(string $src, array &$dst, string $mch_key): bool
+    {
+        $srcDecode = base64_decode($src, true);
+        $key = md5($mch_key);
+        $data = openssl_decrypt($srcDecode, 'AES-256-ECB', $key, OPENSSL_RAW_DATA, '');
+        if ($data === false) {
+            return false;
+        }
+        $decodeData = self::xmlToArray($data, 'root');
+        if ($decodeData === null) {
+            return false;
+        }
+        $dst = array_merge($dst, $decodeData);
+        return true;
     }
 }
