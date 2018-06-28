@@ -10,6 +10,7 @@ use yii\web\Response;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use bobchengbin\Yii2XmlRequestParser\Xml2Array;
 use bobchengbin\Yii2XmlRequestParser\XmlRequestParser;
 use lspbupt\wechat\helpers\XmlResponseFormatter;
 
@@ -246,22 +247,17 @@ class WxPay extends \lspbupt\curl\CurlHttp
 
     private static function xmlToArray(string $xml): ?array
     {
-        try {
-            $ret = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
-        } catch (\Exception $e) {
-            return null;
-        }
-        return json_decode(json_encode($ret), true) ?: null;
+        return ArrayHelper::getValue(Xml2Array::go($xml), 'xml', null);
     }
 
     private function setCert()
     {
-        curl_setopt($this->getCurl(), CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($this->getCurl(), CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($this->getCurl(), CURLOPT_SSLCERTTYPE, 'PEM');
-        curl_setopt($this->getCurl(), CURLOPT_SSLCERT, Yii::getAlias($this->apiclient_cert));
-        curl_setopt($this->getCurl(), CURLOPT_SSLKEYTYPE, 'PEM');
-        curl_setopt($this->getCurl(), CURLOPT_SSLKEY, Yii::getAlias($this->apiclient_key));
+        $this->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        $this->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+        $this->setOpt(CURLOPT_SSLCERTTYPE, 'PEM');
+        $this->setOpt(CURLOPT_SSLCERT, Yii::getAlias($this->apiclient_cert));
+        $this->setOpt(CURLOPT_SSLKEYTYPE, 'PEM');
+        $this->setOpt(CURLOPT_SSLKEY, Yii::getAlias($this->apiclient_key));
         return $this;
     }
 
