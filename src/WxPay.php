@@ -22,6 +22,7 @@ class WxPay extends \lspbupt\curl\CurlHttp
     const PAY_CODE_PAY_FAIL = 20;
 
     const PAY_TRADE_TYPE_JSAPI = 'JSAPI';
+    const PAY_TRADE_TYPE_NATIVE = 'NATIVE';
     /**
      * @var string 商户号，见开户邮件
      */
