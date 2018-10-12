@@ -53,19 +53,29 @@ class WxPay extends \lspbupt\curl\CurlHttp
     public $wxapp = 'wxapp';
 
     private $optional = [];
+    /**
+     * @var string 支付时 appid
+     */
+    private $payappid;
 
     public function init()
     {
         parent::init();
         $this->wxapp = Instance::ensure(Yii::$app->{$this->wxapp}, WxApp::class);
+        $this->payappid = $this->wxapp->appid;
         $this->beforeRequest = Closure::fromCallable([$this, 'beforeRequest']);
         $this->afterRequest = Closure::fromCallable([$this, 'afterRequest']);
+    }
+
+    public function setPayAppid($appid)
+    {
+        $appid && $this->payappid = $appid;
     }
 
     public function buildJsapiParams(string $prepayId): array
     {
         $data = [
-            'appId' => $this->wxapp->appid,
+            'appId' => $this->payappid,
             'timeStamp' => (string) time(),
             'nonceStr' => self::nonceStr(),
             'package' => "prepay_id=$prepayId",
@@ -145,7 +155,7 @@ class WxPay extends \lspbupt\curl\CurlHttp
         $self->setPost();
         $self->setFormData();
         $params = array_merge([
-            'appid' => $self->wxapp->appid,
+            'appid' => $self->payappid,
             'mch_id' => $self->mch_id,
             'nonce_str' => self::nonceStr(),
         ], $params);
