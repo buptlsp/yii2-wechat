@@ -23,6 +23,7 @@ class WxPay extends \lspbupt\curl\CurlHttp
 
     const PAY_TRADE_TYPE_JSAPI = 'JSAPI';
     const PAY_TRADE_TYPE_NATIVE = 'NATIVE';
+    const PAY_TRADE_TYPE_MWEB = 'MWEB';
     /**
      * @var string 商户号，见开户邮件
      */
