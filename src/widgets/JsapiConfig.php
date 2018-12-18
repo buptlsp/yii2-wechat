@@ -1,11 +1,13 @@
 <?php
+
 namespace lspbupt\wechat\widgets;
-use \Yii;
+
+use Yii;
 use yii\base\Widget;
-use yii\web\JsExpression;
 use yii\base\InvalidConfigException;
 use lspbupt\wechat\Wechat;
 use lspbupt\wechat\assets\WechatAsset;
+
 class JsapiConfig extends Widget
 {
     public $debug = false;
@@ -25,7 +27,7 @@ class JsapiConfig extends Widget
             $this->wechat = Yii::createObject($this->wechat);
         }
         if (!$this->wechat instanceof wechat) {
-            throw new InvalidConfigException("微信配置错误");
+            throw new InvalidConfigException('微信配置错误');
         }
     }
 
@@ -33,7 +35,7 @@ class JsapiConfig extends Widget
     {
         $request = \Yii::$app->request;
         $url = $request->hostInfo.urldecode($request->getUrl());
-        return $url;  
+        return $url;
     }
 
     public function run()
@@ -45,16 +47,16 @@ class JsapiConfig extends Widget
         ];
         $sign = $this->wechat->JsSign($arr);
         $debug = $this->debug ? 'true' : 'false';
-        $js ="wx.config({
-             debug : ". $debug .",
+        $js = 'wx.config({
+             debug : '. $debug .",
              appId: '".$this->wechat->appid."',// 必填，企业ID
              timestamp: ".$arr['timestamp'].", // 必填，生成签名的时间戳
              nonceStr: '".$arr['noncestr']."', // 必填，生成签名的随机串
              signature: '".$sign."', // 必填，签名
-             jsApiList: ".json_encode($this->jsApiList)." // 必填，需要使用的jsapi列表
+             jsApiList: ".json_encode($this->jsApiList).' // 必填，需要使用的jsapi列表
         });
-        wx.ready(".$this->successJs.");
-        wx.error(".$this->errorJs.");";
+        wx.ready('.$this->successJs.');
+        wx.error('.$this->errorJs.');';
         $view->registerJs($js);
     }
 }
