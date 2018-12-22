@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use Closure;
 use lspbupt\wechat\helpers\XmlResponseFormatter;
+use lspbupt\wechat\Wechat;
 
 //微信公众号回调接口
 
@@ -175,5 +176,71 @@ class CallbackAction extends Action
             ],
         ];
         return self::replyNewsMsg($items, $from, $to, $createTime);
+    }
+
+    /**
+     * @var array[] replyXxxMsg返回的数组的数组
+     * @var Wechat 微信组件
+     * @return array
+     */
+    public static function replyMultipleMsg(array $messages, Wechat $wechat)
+    {
+        if (!$wechat instanceof Wechat) {
+            throw new InvalidConfigException('若批量回复多条消息，必须配置相应的Wechat组件以主动发送消息！');
+        }
+        $interval = (int) (100 * 1000 / count($messages));
+        $lastMessage = array_pop($messages);
+        foreach ($messages as $message) {
+            $message = self::xmlArrResponseToJsonRequestForCustomMessage($message);
+            $wechat->setPostJson(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                ->send('/cgi-bin/message/custom/send', $message);
+            usleep($interval);
+        }
+        return $lastMessage;
+    }
+
+    /**
+     * @author 杨国帅 [ygs@cgcal.com]
+     * @var array 通过self::getCdataArr得到的待转为XML的数组。
+     * @see https://mp.weixin.qq.com/wiki?action=doc&id=mp1421140547
+     * @return array
+     */
+    private static function xmlArrResponseToJsonRequestForCustomMessage($array)
+    {
+        $jsonArray = [
+            'touser' => $array['ToUserName'][0],
+            'msgtype' => $array['MsgType'][0],
+        ];
+        switch ($jsonArray['msgtype']) {
+            case 'text':
+                $jsonArray['text'] = [
+                    'content' => $array['Content'][0],
+                ];
+                break;
+            case 'image':
+                $jsonArray['image'] = [
+                    'media_id' => $array['Image']['MediaId'][0],
+                ];
+                break;
+            case 'voice':
+                $jsonArray['voice'] = [
+                    'media_id' => $array['Voice']['MediaId'][0],
+                ];
+                break;
+            case 'news':
+                $article = $array['Articles'][0];
+                $jsonArray['news'] = [
+                    'articles' => [[
+                        'title' => $article['Title'][0],
+                        'description' => $article['Description'][0],
+                        'url' => $article['Url'][0],
+                        'picurl' => $article['PicUrl'][0],
+                    ]],
+                ];
+                break;
+            default:
+                break;
+        }
+        return $jsonArray;
     }
 }
