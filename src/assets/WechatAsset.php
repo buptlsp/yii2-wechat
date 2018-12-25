@@ -1,7 +1,9 @@
 <?php
+
 namespace lspbupt\wechat\assets;
 
 use yii\web\AssetBundle;
+
 class WechatAsset extends AssetBundle
 {
     public $js = [

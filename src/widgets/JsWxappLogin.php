@@ -1,18 +1,20 @@
 <?php
+
 namespace lspbupt\wechat\widgets;
-use \Yii;
+
+use Yii;
 use yii\base\Widget;
-use yii\web\JsExpression;
 use yii\base\InvalidConfigException;
 use lspbupt\wechat\WxApp;
 use lspbupt\wechat\assets\WxappLoginAsset;
+
 class JsWxappLogin extends Widget
 {
     public $debug = false;
     public $wxApp = 'wxapp';
     public $id = 'login_container';
     public $scope = 'snsapi_login';
-    public $redirect_uri = ''; 
+    public $redirect_uri = '';
     public $state = '';
     public $style = 'black';
     public $href = '';
@@ -28,7 +30,7 @@ class JsWxappLogin extends Widget
             $this->wxApp = Yii::createObject($this->wxApp);
         }
         if (!$this->wxApp instanceof WxApp) {
-            throw new InvalidConfigException("微信配置错误");
+            throw new InvalidConfigException('微信配置错误');
         }
     }
 
