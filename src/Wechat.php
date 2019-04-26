@@ -12,6 +12,8 @@ class Wechat extends \lspbupt\curl\CurlHttp
     public $appsecret = '';
     public $host = 'api.weixin.qq.com';
     public $protocol = 'https';
+    //不需要access_token的action
+    public $excludeActions = [];
 
     public $cache = 'cache';
     const WEIXIN_TOKENURL = '/cgi-bin/token';
@@ -22,9 +24,10 @@ class Wechat extends \lspbupt\curl\CurlHttp
     {
         parent::init();
         $this->cache = Instance::ensure($this->cache, Cache::className());
+        $this->excludeActions[] = self::WEIXIN_TOKENURL;
         $this->beforeRequest = function ($params, $curlhttp) {
             $action = $curlhttp->getAction();
-            if ($action != self::WEIXIN_TOKENURL) {
+            if (!in_array($action, $curlhttp->excludeActions)) {
                 $ch = clone $curlhttp;
                 $token = $ch->getTokenFromCache();
                 if (strpos($action, '?') != 0) {

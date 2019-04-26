@@ -50,6 +50,21 @@ $data = Yii::$app->wechat
     ]);
 ```
 
+* 接口返回封装
+
+在正常情况下，我们的请求可能会出现网络，超时等情况。无论出现什么异常，数据返回的结果的格式均是如下的格式：
+
+```javascript
+{
+    //错误码，参见微信接口文档。非微信返回原因的错误（如网络超时），代码为1。
+    "errcode" : 0,
+    // 错误信息
+    "errmsg" : "错误信息",
+    // 当成功时的数据。
+    "data" : {},
+}
+```
+
 * 接口调试示例
 
 对于wechat的基本功能的使用，可以参见我的另一个[开源项目][2],可以按其中的说明，配置好命令行工具，这样我们就可以在命令行敲命令来调试微信接口了。如下图所示为第一次发起/cig-bin/user/get接口，由于没有access_token,所以先获取access_token,然后再发起/cgi-bin/user/get请求,整个过程用户无感知。
@@ -57,7 +72,7 @@ $data = Yii::$app->wechat
 ![wechat工具第一次请求示意](docs/img/wechat_console1.jpg)
 
 如下为第二次请求（上传素材），由于已经在cache中有了access_token，本次直接发起请求。
-![wechat工具后续请求示意](docs/img/wechat_console1.jpg)
+![wechat工具后续请求示意](docs/img/wechat_console2.jpg)
 
 
 # JSSDK
