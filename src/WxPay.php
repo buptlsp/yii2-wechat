@@ -5,7 +5,6 @@ namespace lspbupt\wechat;
 use Yii;
 use Closure;
 use InvalidArgumentException;
-use yii\di\Instance;
 use yii\web\Response;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
@@ -51,10 +50,6 @@ class WxPay extends \lspbupt\curl\CurlHttp
      * @var string 回调地址
      */
     public $notify_url;
-    /**
-     * @var WxApp 微信组件，包含appid和appSecret
-     */
-    public $wxapp = 'wxapp';
 
     private $optional = [];
     /**
@@ -65,15 +60,13 @@ class WxPay extends \lspbupt\curl\CurlHttp
     public function init()
     {
         parent::init();
-        $this->wxapp = Instance::ensure(Yii::$app->{$this->wxapp}, WxApp::class);
-        $this->payappid = $this->wxapp->appid;
         $this->beforeRequest = Closure::fromCallable([$this, 'beforeRequest']);
         $this->afterRequest = Closure::fromCallable([$this, 'afterRequest']);
     }
 
     public function setPayAppid($appid)
     {
-        $appid && $this->payappid = $appid;
+        $this->payappid = $appid;
     }
 
     public function buildJsapiParams(string $prepayId): array
