@@ -20,7 +20,7 @@
 ```
 或者
 ```
-composer require lspbupt/yii2-wechat
+composer require lspbupt/yii2-wechat dev-master
 ```
 ## 主要功能
 
