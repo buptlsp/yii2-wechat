@@ -28,8 +28,10 @@ composer require lspbupt/yii2-wechat
 
  - [微信公众号对接][1]
  - [微信h5支付对接][2]
- - [外部网站微信扫码登录对接][3]
- - [微信小程序对接][4]
+ - [微信小程序对接][5]
+ 
+ - [外部网站微信内登录对接][3]
+ - [外部网站微信扫码登录对接][4]
 
 ## 大致说明
 
@@ -76,11 +78,9 @@ echo JSxxxConfig:: widget([
 我们是一群热爱技术，追求卓越的极客，我们乐于做一些对整个社会都有作用的事情，我们希望通过我们的努力来推动整个社会的创新，如果你也一样，欢迎加入我们（service@ethercap.com）！你也可以通过https://tech.ethercap.com 来了解更多！
 
 
- 
 
-
-  [1]: docs/Wechat.md
-  [2]: docs/WxPay.md
-  [3]: docs/WxLogin.md
-  [4]: docs/WxApp.md
-  [5]: docs/WxSmallApp.md
+[1]: docs/Wechat.md
+[2]: docs/WxPay.md
+[3]: docs/WxLogin.md
+[4]: docs/WxApp.md
+[5]: docs/WxSmallApp.md
