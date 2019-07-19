@@ -2,7 +2,7 @@
 ------
 
 # 使用说明
-在使用前,请先参考微信支付商户的普通商户的[开发文档][1]，具体的接口说明，以微信的文档为准。 
+在使用前,请先参考微信支付商户的普通商户的[开发文档][1]，具体的接口说明，以微信的文档为准。
 
 # WxPay为你提供了：
   * 自动处理`开发者`向`微信服务器`请求的请求/响应格式
@@ -43,7 +43,7 @@ APP支付需要单独申请（申请见[微信开放平台][2]），与公众号
 # 后台对接
 
 * 配置注入实例
-在yii2的web配置中，加入如下的配置，推荐放入至common的`main-local.php`中，如 `common/config/main-local.php`中。 
+在yii2的web配置中，加入如下的配置，推荐放入至common的`main-local.php`中，如 `common/config/main-local.php`中。
 
 ```php
 return [
@@ -87,9 +87,9 @@ return [
   Yii::$app->wechat->setOptional('out_trade_no', 'foo|bar|123')->orderquery();
   Yii::$app->wechat->setOptional('transaction_id', '12312321212')->orderquery();
   ```
-  
+
   如果每个可选参数都没有提供，将会抛出异常。
-  
+
   ## 统一下单
   ```php
   public function unifiedorder($body, $tradeNo, $totalFee, array $params = [])
@@ -207,8 +207,8 @@ return [
         public function actions()
         {
             return [
-                'bar' => [
-                    'class' => Yii::$app->wxpay->callbackAction(function ($post) {
+                'bar' => Yii::$app->wxpay->callbackAction(
+                    function ($post) {
                         if(isset($post['refund_id'])) {
                            $result = Baz::processAfterRefund($post);
                         } else {
@@ -224,7 +224,8 @@ return [
                             'return_code' => 'FAIL',
                             'return_msg' => '处理错误',
                         ];
-                ],
+                    }
+                ),
             ];
         }
     }

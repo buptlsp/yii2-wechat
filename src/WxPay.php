@@ -257,11 +257,11 @@ class WxPay extends \lspbupt\curl\CurlHttp
         return $this;
     }
 
-    public function callbackAction(Closure $processData): string
+    public function callbackAction(Closure $processData): array
     {
         $callback = new class('', '', []) extends Action {
-            public static $checkSign;
-            public static $processData;
+            public $checkSign;
+            public $processData;
 
             public function init()
             {
@@ -270,10 +270,10 @@ class WxPay extends \lspbupt\curl\CurlHttp
                 }
                 parent::init();
                 $this->controller->enableCsrfValidation = false;
-                if (empty(self::$processData)) {
+                if (empty($this->processData)) {
                     throw new InvalidConfigException('请配置处理函数');
                 }
-                if (!(self::$processData instanceof Closure)) {
+                if (!($this->processData instanceof Closure)) {
                     throw new InvalidConfigException('处理函数必须是Closure');
                 }
                 //自动处理xml，将rawBody中的xml直接转换为Yii::$app->request->post()
@@ -298,8 +298,8 @@ class WxPay extends \lspbupt\curl\CurlHttp
             public function run()
             {
                 $post = Yii::$app->request->post();
-                if (call_user_func_array(self::$checkSign, [&$post])) {
-                    return call_user_func(self::$processData, $post);
+                if (call_user_func_array($this->checkSign, [&$post])) {
+                    return call_user_func($this->processData, $post);
                 }
                 return [
                     'return_code' => 'FAIL',
@@ -307,9 +307,11 @@ class WxPay extends \lspbupt\curl\CurlHttp
                 ];
             }
         };
-        $callback::$checkSign = Closure::fromCallable([$this, 'checkDecodeSign']);
-        $callback::$processData = $processData;
-        return get_class($callback);
+        return [
+            'class' => get_class($callback),
+            'checkSign' => Closure::fromCallable([$this, 'checkDecodeSign']),
+            'processData' => $processData,
+        ];
     }
 
     private function checkDecodeSign(array &$data, $signKey = 'sign'): bool

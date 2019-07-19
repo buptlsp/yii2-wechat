@@ -29,7 +29,7 @@ return [
     //....
 ];
 ```
-**注意：**由于微信小程序的请求方式和wechat一样，所以WxSmallApp是Wechat的子类。因此其使用方法与Wechat完全一致。
+**注意：** 由于微信小程序的请求方式和wechat一样，所以WxSmallApp是Wechat的子类。因此其使用方法与Wechat完全一致。
 
 * 发起请求：
 
