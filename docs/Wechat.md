@@ -69,10 +69,10 @@ $data = Yii::$app->wechat
 
 对于wechat的基本功能的使用，可以参见我的另一个[开源项目][2],可以按其中的说明，配置好命令行工具，这样我们就可以在命令行敲命令来调试微信接口了。如下图所示为第一次发起/cig-bin/user/get接口，由于没有access_token,所以先获取access_token,然后再发起/cgi-bin/user/get请求,整个过程用户无感知。
 
-![wechat工具第一次请求示意](docs/img/wechat_console1.jpg)
+![wechat工具第一次请求示意](/docs/img/wechat_console1.jpg)
 
 如下为第二次请求（上传素材），由于已经在cache中有了access_token，本次直接发起请求。
-![wechat工具后续请求示意](docs/img/wechat_console2.jpg)
+![wechat工具后续请求示意](/docs/img/wechat_console2.jpg)
 
 
 # JSSDK
